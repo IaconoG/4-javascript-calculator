@@ -1,38 +1,112 @@
-.App {
-  text-align: center;
+:root {
+  --clr-black: #282c34;
+  --clr-black-darker: #1c1f24;
+  --clr-dark-grey: #1d1b21;
+  --clr-dark-surface: #211f26;
+  --clr-grey-surface: #3c3c3c;
+  --crl-primary-color: #9c8e78;
+
+  --clr-white: #fff;
+  --clr-white-medium: rgb(255, 255, 255, 0.5);
+  --clr-white-disabled: rgb(255, 255, 255, 0.2);
+  /*--clr-orange: #d9b08c;
+  --crl-first: #5a3938;
+  --clr-second: #847b6d;
+  --clr-third: #a3ab98;
+  --clr-fourth: #d2d5af;
+  --clr-fifth: #dfa49b; */
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+button {
+  border: none;
+  outline: none;
+  color: var(--clr-white-medium);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--clr-dark-grey);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--clr-white-medium);
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.main-container {
+  min-width: 550px;
+  width: 550px;
+  max-width: 550px;
+  min-height: 400px;
+  height: 400px;
+  max-height: 80vh;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 0.5rem;
+  background-color: var(--clr-black);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--clr-white-disabled);
+  border-radius: 0.5rem;
 }
-
-.App-link {
-  color: #61dafb;
+.display {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--clr-black-darker);
+  border-radius: 0.25rem;
+  border: 1px solid var(--clr-white-disabled);
+  padding-block: 0.25rem;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.display > * {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-inline: 1rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.display .operation {
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  min-height: 21.25px;
+}
+.display .result {
+  font-size: 3.5rem;
+  line-height: 100%;
+  color: var(--crl-primary-color);
+}
+.btns-container {
+  width: 100%;
+  height: 70%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 3.8px;
+}
+.btn {
+  border-radius: 0.5rem;
+  font-size: 1.7rem;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+.btn:active {
+  transform: scale(0.95);
+}
+.btn.numbers {
+  background-color: var(--clr-grey-surface);
+}
+.btn.accions {
+  background-color: var(--clr-dark-surface);
+}
+.btn.equals {
+  grid-row: span 3; /* El botón "igual" ocupa 2 filas */
+  background-color: var(--crl-primary-color);
+  color: var(--clr-dark-surface);
 }
