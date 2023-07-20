@@ -9,12 +9,6 @@
   --clr-white: #fff;
   --clr-white-medium: rgb(255, 255, 255, 0.5);
   --clr-white-disabled: rgb(255, 255, 255, 0.2);
-  /*--clr-orange: #d9b08c;
-  --crl-first: #5a3938;
-  --clr-second: #847b6d;
-  --clr-third: #a3ab98;
-  --clr-fourth: #d2d5af;
-  --clr-fifth: #dfa49b; */
 }
 * {
   box-sizing: border-box;
@@ -25,6 +19,15 @@ button {
   border: none;
   outline: none;
   color: var(--clr-white-medium);
+  user-select: none;
+}
+input[type="text"] {
+  all: initial;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  text-align: end;
+  padding-inline: 1rem;
+  font-weight: 500;
+  display: block;
 }
 
 .app {
@@ -63,24 +66,19 @@ button {
   border: 1px solid var(--clr-white-disabled);
   padding-block: 0.25rem;
 }
-.display > * {
-  height: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-inline: 1rem;
-  font-size: 1.5rem;
-  font-weight: 500;
-}
 .display .operation {
   font-size: 1rem;
   letter-spacing: 0.1rem;
-  min-height: 21.25px;
+  color: var(--clr-white-medium);
+  padding-top: 0.3rem;
 }
 .display .result {
   font-size: 3.5rem;
-  line-height: 100%;
   color: var(--crl-primary-color);
+  margin-top: -0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .btns-container {
   width: 100%;
