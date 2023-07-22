@@ -1,140 +1,83 @@
 import './App.css';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function App() {
-  const [currentNumber, setCurrentNumber] = useState(null);
-  const [previousNumber, setPreviousNumber] = useState(null);
-  const [resolver, setResolver] = useState(false);
-  const [resetNum, setResetNum] = useState(false); 
-  const [negativo, setNegativo] = useState(false); 
-  const [currentSimbol, setCurrentSimbol] = useState('');
-  const [displayResult, setDisplayResult] = useState('0');
-  const [displayOperacion, setDisplayOperacion] = useState('');
+  const inputRef = useRef(null);
+  const [display, setDisplay] = useState('0');
+  const [contador, setContador] = useState(0);
+  const [dot, setDot] = useState(false);
+  const regexSimbolsLast = /[+\-*/]+$/;
+    // [+\-*/]: Corresponde a cualquier carácter que sea uno de los cuatro operadores matemáticos (+, -, *, /).
+    // $ -> final de la cadena
+  const regexDecimal = /\./;
 
-  const ecuaciones = (op) => {
-    let resultado = 0;
-    switch (op) {
-      case '/':
-        resultado = previousNumber / currentNumber;
+
+  const handleBtnNumber = (number) => {
+    if (display === '0') setDisplay(number); 
+    else setDisplay(display + number);
+  }
+  
+  useEffect(() => {
+    const inputElement = inputRef.current;;
+    const letters = display.length;
+    
+    if (letters < 19) inputElement.style.fontSize = '3rem';
+    else if (letters >= 19 && letters < 24) inputElement.style.fontSize = '2.5rem';
+    else if (letters >= 24 && letters < 29) inputElement.style.fontSize = '2rem';
+    else if (letters >= 29) inputElement.style.fontSize = '1.5rem';
+  }, [display]);
+
+  const handleBtnAccion = (accion) => {
+    switch (accion) {
+      case 'delete':
+        setDisplay('0');
+        setDot(false);
         break;
-      case 'x':
-        resultado = previousNumber * currentNumber;
+      case '+/-':
+        setDisplay("(" +display.replace(regexSimbolsLast, '')+ ")*-1");
+        break;
+      case '.':
+          if (!dot && !regexSimbolsLast.test(display)) {
+            setDisplay(prevDisplay => prevDisplay + '.');
+            setDot(true);
+          }
         break;
       case '-':
-        resultado = previousNumber - currentNumber;
-        break;
+          if (!(/[-]$/.test(display))) setDisplay(display + accion);
+          break;
       case '+':
-        resultado = previousNumber + currentNumber;
+      case '*':
+      case '/':
+        if (!regexSimbolsLast.test(display)) setDisplay(display + accion);
+        else setDisplay(display.replace(regexSimbolsLast, accion));
+        setDot(false);
+        break;
+      case '=':
+        const resultado = (regexSimbolsLast.test(display)) ? eval(display.replace(regexSimbolsLast, '')) : eval(display);
+        setDot(regexDecimal.test(resultado))
+        setDisplay(resultado.toString());
         break;
       default:
         break;
     }
-  return resultado;
   }
-        
-
-  const handleBtnNumber = (numero) => {
-    if (resolver || currentSimbol === '=') {
-      setResolver(false);
-      setDisplayOperacion('');
-      setPreviousNumber(null)
-      setCurrentNumber(null);
-      setCurrentSimbol('');
-      setDisplayResult(numero);
-    } 
-    if (displayResult === '0' || resetNum) {
-      if (negativo) {
-        numero *= -1;
-        setNegativo(false);
-      }
-      setDisplayResult(numero);
-      setResetNum(false)
-    }
-    else setDisplayResult(displayResult + numero);
-  }
-  const handleBtnAccion = (op) => {
-    if (op === '') {
-      setDisplayResult('0');
-      setDisplayOperacion('');
-      setResolver(false);
-      setCurrentSimbol('');
-      setCurrentNumber(null);
-      setPreviousNumber(null);
-      return;
-    }
-    if (resolver) return
-    switch (op) {
-      case '-':
-        if (currentSimbol !== '') {
-          setNegativo(true);
-          setDisplayResult(parseFloat(displayResult) * -1);
-          break;
-        }
-      case '/':
-      case 'x':
-      case '+':
-      case '=':
-        if (currentSimbol === '') {
-          setCurrentSimbol(op);
-          setPreviousNumber(parseFloat(displayResult))
-          setResetNum(true);
-        } else {
-          if (op !== '=' && op !== currentSimbol) setCurrentSimbol(op); // cambio de simbolo
-          else if (op === '=') {
-            setResetNum(true);
-            setResolver(true);
-            setCurrentNumber(parseFloat(displayResult));
-          }
-        }
-        break;
-    case '+/-':
-      setDisplayResult(parseFloat(displayResult) * -1);
-      break;
-    case '.':
-      if (displayResult.includes('.')) return;
-      setDisplayResult(displayResult + '.');
-      break;
-    default:
-      break;
-    }
-  }
-  useEffect(() => {
-    if (currentSimbol === '') return;
-    setDisplayOperacion(previousNumber + currentSimbol);
-    if (displayResult[displayResult.length - 1] === '.') setDisplayResult(displayResult.slice(0, -1)); // Fix numero con punto al final sin numeros decimales
-  }, [currentSimbol]);
-
-  useEffect(() => {
-    if (!resolver) return;
-    setDisplayResult(ecuaciones(currentSimbol));
-    setDisplayOperacion(previousNumber + currentSimbol + currentNumber + '=');
-  }, [resolver]);
-
-
-  
-// todo: se debe acumular las operaciones :DDDDDDDDDDDDDDD
-
-  
 
   return (
     <div className="app">
       <div className="main-container">
         <div className="display">
-          <input type="text" className='operation' value={displayOperacion} readOnly />
-          <input id="display"  type="text" className='result' value={displayResult} readOnly />
-          {/* <div className="operation">{displayOperacion}</div> */}
-          {/* <div className="result">{displayResult}</div> */}
+          <input id="display" ref={inputRef} type="text" className='result' value={display} readOnly />
         </div>
         <div className="btns-container">
           <button id="divide" className="btn accions" onClick={() => handleBtnAccion('/')}>/</button>
-          <button id="multiply" className="btn accions" onClick={() => handleBtnAccion('x')}>x</button>
+          <button id="multiply" className="btn accions" onClick={() => handleBtnAccion('*')}>x</button>
           <button id="subtract" className="btn accions" onClick={() => handleBtnAccion('-')}>-</button>
           <button id="add" className="btn accions" onClick={() => handleBtnAccion('+')}>+</button>
           <button id="seven" className="btn numbers" onClick={() => handleBtnNumber('7')}>7</button>
           <button id="eight" className="btn numbers" onClick={() => handleBtnNumber('8')}>8</button>
           <button id="nine" className="btn numbers" onClick={() => handleBtnNumber('9')}>9</button>
-          <button id="clear" className="btn accions" onClick={() => handleBtnAccion('')}>Delete</button>
+          <button id="clear" className="btn accions" onClick={() => handleBtnAccion('delete')}>Delete</button>
           <button id="four" className="btn numbers" onClick={() => handleBtnNumber('4')}>4</button>
           <button id="five" className="btn numbers" onClick={() => handleBtnNumber('5')}>5</button>
           <button id="six" className="btn numbers" onClick={() => handleBtnNumber('6')}>6</button>
