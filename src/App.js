@@ -45,6 +45,7 @@ function App() {
         break;
       case '-':
           if (!(/[-]$/.test(display))) setDisplay(display + accion);
+          setDot(false);
           break;
       case '+':
       case '*':
