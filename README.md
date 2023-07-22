@@ -8,3 +8,4 @@
 
 - Para el js se debio agregar los paqutes: React y ReactDOM
 
+https://github.com/freeCodeCamp/freeCodeCamp/issues/45922
